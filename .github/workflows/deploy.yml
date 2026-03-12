@@ -7,17 +7,21 @@
 #  Job 2 (deploy):     Deploys static site to GitHub Pages
 # ═══════════════════════════════════════════════════════
 name: Krishna Markets Hub
+
 on:
   push:
     branches: [ main ]
   schedule:
     - cron: '*/15 * * * *'   # every 15 minutes
   workflow_dispatch:
+
 permissions:
   contents: write           # needed to git push data.json
   pages: write
   id-token: write
+
 jobs:
+
   # ── Job 1: Fetch market data with Python ──────────────
   fetch-data:
     name: Fetch Market Data
@@ -28,14 +32,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+
       - name: Install dependencies
         run: pip install yfinance
+
       - name: Fetch market data
         run: python fetch_market_data.py
+
       - name: Commit data.json if changed
         run: |
           git config user.name "github-actions[bot]"
@@ -45,6 +53,7 @@ jobs:
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   # ── Job 2: Deploy to GitHub Pages ─────────────────────
   deploy:
     name: Deploy to GitHub Pages
@@ -59,12 +68,15 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Setup Pages
-        uses: actions/configure-pages@v5        # ← updated from v4
+        uses: actions/configure-pages@v4
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
+
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v5          # ← updated from v4
+        uses: actions/deploy-pages@v4
