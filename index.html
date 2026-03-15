@@ -1,1028 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
-<title>NIFTY Indian Markets HUB — Deep Navy</title>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&family=Orbitron:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-:root{
-  --bg:#0d1b3e;--panel:#0e1f45;--p2:#0a1628;
-  --cyan:#60a5fa;--pink:#93c5fd;--yel:#fbbf24;
-  --grn:#4ade80;--pur:#818cf8;--red:#f87171;
-  --bc:rgba(96,165,250,.15);--bp:rgba(96,165,250,.08);
-  --b1:rgba(96,165,250,.07);--b2:rgba(96,165,250,.12);
-  --tx:#cce0ff;--t2:rgba(96,165,250,.75);--t3:rgba(96,165,250,.45);
-}
-
-html,body{
-  background:linear-gradient(135deg,#0d1b3e 0%,#0a1628 40%,#0d2040 100%);
-  color:var(--tx);
-  font-family:'Space Grotesk',sans-serif;
-  font-weight:500;
-  overflow-x:hidden;
-  min-height:100vh;
-  -webkit-text-size-adjust:100%;
-}
-
-body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:linear-gradient(rgba(96,165,250,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(96,165,250,.025) 1px,transparent 1px);
-  background-size:50px 50px;}
-body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(ellipse 80% 50% at 50% -5%,rgba(96,165,250,.1) 0%,transparent 55%),
-    radial-gradient(ellipse 30% 40% at 5% 60%,rgba(96,165,250,.05) 0%,transparent 50%),
-    radial-gradient(ellipse 25% 35% at 95% 40%,rgba(251,191,36,.04) 0%,transparent 50%);}
-#scan{position:fixed;inset:0;z-index:998;pointer-events:none;
-  background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,20,.04) 3px,rgba(0,0,20,.04) 4px);}
-
-#app{position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column}
-
-/* ══ TOPBAR ══ */
-.tb{
-  background:rgba(8,18,48,.95);
-  border-bottom:1px solid rgba(96,165,250,.25);
-  padding:4px 12px;
-  display:flex;justify-content:space-between;align-items:center;
-  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;
-  position:relative;z-index:10;
-  box-shadow:0 0 20px rgba(96,165,250,.06);
-  min-height:28px;
-  flex-wrap:nowrap;
-  gap:8px;
-}
-.tb-l{color:#93c5fd;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;opacity:1;}
-.tb-r{display:flex;gap:10px;color:rgba(148,186,255,.85);flex-shrink:0;font-size:11px;}
-.tb-r .v{color:var(--t2)}.tb-r .live{color:var(--grn)}
-
-.dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--grn);
-  box-shadow:0 0 8px var(--grn);animation:blink 1.4s ease-in-out infinite;
-  margin-right:4px;vertical-align:middle;flex-shrink:0;}
-@keyframes blink{0%,100%{opacity:1}50%{opacity:.08}}
-
-/* ══ HEADER ══ */
-header{
-  background:linear-gradient(180deg,rgba(13,27,62,.99) 0%,rgba(10,22,50,.97) 100%);
-  border-bottom:1px solid var(--bc);
-  padding:10px 14px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:10px;
-  position:sticky;top:0;z-index:90;
-  backdrop-filter:blur(20px);
-  box-shadow:0 1px 0 rgba(96,165,250,.1),0 4px 20px rgba(0,0,20,.7);
-  flex-wrap:nowrap;
-}
-header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--cyan),var(--pur),var(--cyan),transparent);opacity:.4;}
-
-.brand{display:flex;align-items:center;gap:10px;flex-shrink:0;}
-.logo{
-  width:40px;height:40px;flex-shrink:0;
-  border-radius:50%;
-  background:radial-gradient(circle at 35% 35%,rgba(96,165,250,.25),rgba(10,20,50,.8));
-  border:1px solid rgba(96,165,250,.4);
-  display:flex;align-items:center;justify-content:center;font-size:18px;
-  box-shadow:0 0 25px rgba(96,165,250,.2),inset 0 0 18px rgba(96,165,250,.04);
-  animation:hexglow 3s ease-in-out infinite;
-}
-@keyframes hexglow{
-  0%,100%{box-shadow:0 0 25px rgba(96,165,250,.2),inset 0 0 18px rgba(96,165,250,.04)}
-  50%{box-shadow:0 0 40px rgba(96,165,250,.4),0 0 70px rgba(96,165,250,.1),inset 0 0 24px rgba(96,165,250,.08)}}
-.bname{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;letter-spacing:1px;
-  color:#e8f4ff;
-  white-space:nowrap;}
-.bname span{color:#60a5fa;text-shadow:0 0 14px rgba(96,165,250,.5)}
-.bsub{font-size:11px;color:rgba(148,186,255,.6);letter-spacing:2px;margin-top:2px;font-family:'Space Mono',monospace}
-
-/* ══ WORLD CLOCK ══ */
-.wclocks{
-  flex:1;
-  display:flex;align-items:stretch;justify-content:center;
-  overflow-x:auto;overflow-y:hidden;
-  scrollbar-width:none;min-width:0;
-  background:rgba(8,15,38,.6);
-  border:1px solid rgba(96,165,250,.1);
-}
-.wclocks::-webkit-scrollbar{display:none;}
-.wc{display:flex;flex-direction:column;min-width:90px;flex-shrink:0;border-right:1px solid rgba(96,165,250,.07);cursor:default;transition:background .2s;position:relative;}
-.wc:last-child{border-right:none;}
-.wc:hover{background:rgba(96,165,250,.04);}
-.wc.active-market{background:rgba(74,222,128,.04);}
-.wc.active-market .wc-top{border-bottom-color:rgba(16,185,129,.25);}
-.wc.active-market .wc-country{color:#34d399;text-shadow:0 0 10px #34d399;}
-.wc.active-market .wc-top::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grn);box-shadow:0 0 8px var(--grn);}
-.wc.closed-market .wc-country{color:rgba(200,225,255,.75);}
-.wc-top{display:flex;align-items:center;gap:6px;padding:7px 10px 5px;border-bottom:1px solid rgba(96,165,250,.07);position:relative;flex:0 0 auto;}
-.wc-country{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#e0f0ff;letter-spacing:.3px;white-space:nowrap;flex:1;line-height:1;}
-.wc-flag{font-size:14px;flex-shrink:0;line-height:1;}
-.wc-status-dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-left:auto;}
-.wc.active-market .wc-status-dot{background:var(--grn);box-shadow:0 0 6px var(--grn);animation:blink 1.4s ease-in-out infinite;}
-.wc.closed-market .wc-status-dot{background:rgba(244,63,94,.4);}
-.wc-bot{display:flex;align-items:baseline;justify-content:space-between;padding:5px 10px 7px;gap:6px;}
-.wc-time{font-family:'Space Mono',monospace;font-size:16px;color:#b8d0ff;text-shadow:0 0 8px rgba(148,186,255,.3);line-height:1;white-space:nowrap;}
-.wc-zone{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;color:rgba(160,210,255,.8);white-space:nowrap;}
-
-/* ══ HEADER RIGHT PILLS ══ */
-.hright{display:flex;gap:5px;flex-shrink:0;align-items:center;}
-.pill{padding:4px 8px;font-size:10px;letter-spacing:1.5px;font-family:'Space Mono',monospace;text-transform:uppercase;border:1px solid rgba(96,165,250,.25);color:rgba(148,186,255,.9);background:rgba(96,165,250,.06);border-radius:20px;white-space:nowrap;}
-.pill.g{border-color:rgba(74,222,128,.25);color:var(--grn);background:rgba(74,222,128,.08)}
-.pill.p{border-color:rgba(96,165,250,.25);color:var(--cyan);background:rgba(96,165,250,.06)}
-
-/* ══ MARKET BAR ══ */
-.mbar{background:rgba(6,12,32,.95);border-bottom:1px solid rgba(96,165,250,.12);position:relative;z-index:5;overflow:hidden;display:flex;flex-direction:row;align-items:stretch;}
-.mbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,var(--cyan),var(--pur),var(--pink),var(--grn),var(--cyan));opacity:.25;}
-.mbar-row{display:flex;align-items:stretch;flex:1;min-width:0;}
-.mbar-row:last-child{border-bottom:none;}
-.mbar-divider{width:1px;background:linear-gradient(180deg,transparent,rgba(77,159,255,.25),transparent);flex-shrink:0;align-self:stretch;margin:4px 0;}
-.mbar-label{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:3px;padding:6px 8px;flex-shrink:0;width:38px;}
-.mbar-label.india{background:linear-gradient(180deg,rgba(96,165,250,.06),rgba(96,165,250,.02));border-right:1px solid rgba(96,165,250,.1);}
-.mbar-label.global{background:linear-gradient(180deg,rgba(251,191,36,.05),rgba(251,191,36,.01));border-right:1px solid rgba(251,191,36,.1);}
-.mbar-label-flag{font-size:12px;line-height:1;}
-.mbar-label-txt{writing-mode:vertical-rl;text-orientation:mixed;transform:rotate(180deg);font-family:'Space Mono',monospace;font-size:8px;letter-spacing:2px;}
-.mbar-label.india .mbar-label-txt{color:var(--cyan);}
-.mbar-label.global .mbar-label-txt{color:var(--yel);}
-.mbar-items{display:flex;overflow-x:auto;scrollbar-width:none;align-items:stretch;flex:1;}
-.mbar-items::-webkit-scrollbar{display:none;}
-.mbar-item{display:flex;flex-direction:column;justify-content:center;padding:7px 14px 6px;border-right:1px solid rgba(96,165,250,.06);flex-shrink:0;min-width:100px;position:relative;transition:background .2s;}
-.mbar-item:hover{background:rgba(96,165,250,.04);}
-.mbar-item:last-child{border-right:none;}
-.mbar-item::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--ic,rgba(77,159,255,.3));opacity:.4;}
-.mbar-name{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;color:rgba(200,225,255,.9);margin-bottom:3px;white-space:nowrap;}
-.mbar-val{font-family:'Space Mono',monospace;font-size:16px;font-weight:700;color:#e8f4ff;text-shadow:0 0 8px rgba(148,186,255,.3);line-height:1;white-space:nowrap;transition:color .3s;}
-.mbar-chg{font-family:'Space Mono',monospace;font-size:11px;margin-top:2px;white-space:nowrap;display:flex;align-items:center;gap:3px;font-weight:600;}
-.mbar-chg.up{color:#4ade80;}
-.mbar-chg.dn{color:#f87171;}
-.mbar-chg.vix{color:#fbbf24;}
-.mbar-item.is-vix .mbar-val{color:#fbbf24;text-shadow:0 0 8px rgba(251,191,36,.3);}
-@keyframes val-flash{0%{opacity:.4}50%{opacity:1}100%{opacity:1}}
-.val-updated{animation:val-flash .5s ease;}
-.mbar-src{position:absolute;bottom:2px;left:6px;font-family:'Space Mono',monospace;font-size:7px;letter-spacing:1px;opacity:.25;}
-.mbar-updated{position:absolute;top:3px;right:6px;font-family:'Space Mono',monospace;font-size:8px;letter-spacing:1px;color:rgba(77,159,255,.2);z-index:2;}
-
-/* ══ TICKER — Style 1: Bloomberg Dark Pills ══ */
-.tkr{
-  background:#06102a;
-  border-top:1px solid rgba(56,189,248,.25);
-  border-bottom:1px solid rgba(56,189,248,.25);
-  padding:6px 0;overflow:hidden;white-space:nowrap;position:relative;
-}
-.tkr::before,.tkr::after{content:'';position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;}
-.tkr::before{left:0;background:linear-gradient(90deg,#08102a,transparent)}
-.tkr::after{right:0;background:linear-gradient(-90deg,#08102a,transparent)}
-.tkr-t{display:inline-flex;align-items:center;animation:tscroll 150s linear infinite}
-@keyframes tscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-.ti{
-  display:inline-flex;align-items:center;
-  padding:0 6px;font-family:'Space Mono',monospace;
-}
-.ti-inner{
-  display:inline-flex;align-items:center;gap:8px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:4px;
-  padding:4px 11px;
-}
-.ti .s{color:#7dd3fc;font-size:10px;letter-spacing:1.5px;font-weight:700;}
-.ti .tv{color:#f0f9ff;font-size:13px;font-weight:700;letter-spacing:.3px;}
-.up{color:#00e5a0;font-size:11px;font-weight:700;}
-.dn{color:#ff4d6d;font-size:11px;font-weight:700;}
-
-/* ══ STATS BAR ══ */
-.stats{display:grid;grid-template-columns:repeat(4,1fr);background:rgba(96,165,250,.04);gap:1px;border-bottom:1px solid var(--bc);}
-.sb{background:rgba(10,20,50,.9);padding:10px 14px;position:relative;overflow:hidden;}
-.sb::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--sc,var(--cyan));box-shadow:0 0 8px var(--sc,var(--cyan));}
-.sb::after{content:var(--sg,'◈');position:absolute;bottom:-6px;right:8px;font-size:36px;color:rgba(77,159,255,.04);pointer-events:none;line-height:1;font-family:'Space Grotesk',sans-serif;}
-.sb .l{font-family:'Space Mono',monospace;font-size:10px;color:rgba(180,215,255,1);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px;}
-.sb .v{font-family:'Space Mono',monospace;font-size:17px;font-weight:700;color:var(--sc,var(--cyan));text-shadow:0 0 14px currentColor,0 0 28px currentColor;}
-.sb .s{font-size:11px;color:rgba(160,200,255,.9);margin-top:3px}
-
-/* ══ SECTION ══ */
-.sec{padding:10px 14px 8px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--b1);}
-.sec-bar{width:3px;height:12px;background:var(--cyan);box-shadow:0 0 8px var(--cyan);flex-shrink:0}
-.sec-txt{font-family:'Space Mono',monospace;font-size:11px;color:#93c5fd;letter-spacing:2.5px;text-transform:uppercase;font-weight:700;}
-.sec-bdg{margin-left:auto;font-family:'Space Mono',monospace;font-size:10px;color:#34d399;border:1px solid rgba(52,211,153,.6);padding:2px 8px;letter-spacing:2px;background:rgba(52,211,153,.1);white-space:nowrap;border-radius:2px;text-shadow:0 0 8px #34d399;}
-
-/* ══ GROUPS ══ */
-.groups{display:flex;flex-direction:column;gap:0;margin:12px 14px 16px;}
-.sc-group{position:relative;border:1px solid var(--ga,rgba(77,159,255,.15));margin-bottom:12px;border-radius:4px;overflow:hidden;}
-.sc-group:last-child{margin-bottom:0;}
-.sc-group::before{content:'';position:absolute;inset:-1px;background:linear-gradient(135deg,var(--ga,rgba(77,159,255,.12)),transparent 40%,transparent 60%,var(--gb,rgba(77,159,255,.05)));pointer-events:none;z-index:0;opacity:.5;}
-.sc-inner{position:relative;z-index:1;background:rgba(10,20,50,.97);}
-.sc-head{padding:10px 14px;border-bottom:1px solid rgba(96,165,250,.1);display:flex;align-items:center;gap:10px;background:linear-gradient(90deg,rgba(10,20,52,.99),rgba(10,20,52,.85));}
-.sc-head-hex{width:34px;height:34px;flex-shrink:0;border-radius:50%;background:linear-gradient(135deg,rgba(96,165,250,.1),rgba(96,165,250,.04));border:1px solid var(--gc,var(--cyan));display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 0 12px rgba(96,165,250,.12);animation:hexglow2 3s ease-in-out infinite;}
-@keyframes hexglow2{0%,100%{box-shadow:0 0 10px rgba(96,165,250,.3)}50%{box-shadow:0 0 22px rgba(96,165,250,.6)}}
-.sc-head-info{flex:1;min-width:0;}
-.sc-head-tag{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:rgba(180,215,255,1);margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.sc-head-name{font-family:'Space Grotesk',sans-serif;font-size:17px;font-weight:700;letter-spacing:.5px;color:var(--gc,var(--cyan));text-shadow:0 0 20px currentColor,0 0 40px currentColor,0 0 60px currentColor;}
-.sc-head-right{text-align:right;flex-shrink:0;}
-.sc-head-status{font-family:'Space Mono',monospace;font-size:10px;color:#4ade80;display:flex;align-items:center;gap:4px;justify-content:flex-end;}
-.sc-head-nodes{font-size:10px;color:rgba(180,215,255,.95);margin-top:2px;font-family:'Space Mono',monospace;letter-spacing:1px;}
-
-/* ══ CARDS — Style A: Holographic Terminal ══ */
-.sc-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;padding:14px;}
-.sc-cards-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;padding:14px;}
-
-.sc-card{
-  position:relative;border-radius:8px;overflow:hidden;cursor:pointer;
-  background:linear-gradient(135deg,rgba(13,24,56,.98) 0%,rgba(10,18,44,.99) 100%);
-  border:1px solid rgba(96,165,250,.15);
-  transition:transform .25s,box-shadow .25s,border-color .25s;
-  text-decoration:none;color:inherit;display:block;
-  padding:0;
-}
-.sc-card:hover{
-  transform:translateY(-4px);
-  border-color:var(--cc,rgba(96,165,250,.45));
-  box-shadow:0 16px 48px rgba(0,0,0,.5),0 0 0 1px var(--cc,rgba(77,159,255,.3)),0 0 24px rgba(77,159,255,.06);
-}
-
-/* corner brackets */
-.sc-card .corner-tl,.sc-card .corner-br{position:absolute;width:11px;height:11px;border-color:var(--cc,rgba(77,159,255,.5));border-style:solid;opacity:.55;z-index:4;transition:opacity .2s,width .2s,height .2s;}
-.sc-card .corner-tl{top:7px;left:7px;border-width:1px 0 0 1px;}
-.sc-card .corner-br{bottom:7px;right:7px;border-width:0 1px 1px 0;}
-.sc-card:hover .corner-tl,.sc-card:hover .corner-br{opacity:1;width:14px;height:14px;}
-
-.sc-card-inner{position:relative;z-index:2;padding:16px 16px 14px;}
-
-/* top accent line */
-.sc-card-topbar{height:2px;margin:-16px -16px 14px;background:linear-gradient(90deg,var(--cc,var(--cyan)),transparent 70%);opacity:.6;transition:opacity .2s;}
-.sc-card:hover .sc-card-topbar{opacity:1;}
-
-/* glow orb */
-.sc-card-glow{position:absolute;top:-20px;right:-20px;width:90px;height:90px;border-radius:50%;background:radial-gradient(rgba(77,159,255,.04),transparent 70%);pointer-events:none;z-index:1;opacity:.5;}
-
-/* icon + chip row */
-.sc-card-top{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
-.sc-card-ico-wrap{
-  width:36px;height:36px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.03);
-  border:1px solid var(--cc,rgba(77,159,255,.28));
-  border-radius:7px;
-  box-shadow:0 0 12px rgba(96,165,250,.05),inset 0 0 8px rgba(96,165,250,.03);
-  position:relative;overflow:hidden;
-}
-.sc-card-ico-wrap::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 30%,rgba(255,255,255,.06),transparent 60%);}
-.sc-card-ico{font-size:17px;position:relative;z-index:1;}
-.sc-card-ring{display:none;}/* hide old spinner ring */
-
-.sc-card-label{
-  font-family:'Space Mono',monospace;font-size:8.5px;letter-spacing:2px;
-  color:rgba(140,185,255,.75);
-  border:1px solid rgba(77,159,255,.2);
-  padding:2px 7px;border-radius:2px;
-  background:rgba(77,159,255,.04);
-}
-
-/* pulse dot */
-.sc-card-pulse{
-  width:5px;height:5px;border-radius:50%;
-  background:var(--cc,var(--cyan));
-  box-shadow:0 0 6px currentColor;
-  animation:pdotA 2s ease-in-out infinite;
-  margin-left:auto;flex-shrink:0;
-}
-@keyframes pdotA{0%,100%{opacity:1}50%{opacity:.15}}
-
-.sc-card-name{
-  font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;
-  letter-spacing:.2px;color:#e8f4ff;
-  margin-bottom:7px;line-height:1.25;
-}
-.sc-card-desc{font-size:12px;color:rgba(148,186,255,.6);line-height:1.6;margin-bottom:12px;}
-
-.sc-card-footer{
-  display:flex;align-items:center;justify-content:space-between;
-  border-top:1px solid rgba(96,165,250,.09);padding-top:10px;
-}
-.sc-card-tag{
-  font-family:'Space Mono',monospace;font-size:8.5px;letter-spacing:1.5px;
-  padding:2px 7px;border:1px solid rgba(96,165,250,.15);
-  color:rgba(148,186,255,.5);border-radius:2px;
-}
-.sc-card-btn{
-  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;
-  color:var(--cc,var(--cyan));display:flex;align-items:center;gap:6px;
-  text-shadow:0 0 10px currentColor;transition:gap .18s;
-}
-.sc-card-btn-line{
-  width:16px;height:1px;
-  background:var(--cc,var(--cyan));
-  box-shadow:0 0 6px currentColor;transition:width .18s;
-}
-.sc-card:hover .sc-card-btn{gap:10px;}
-.sc-card:hover .sc-card-btn-line{width:26px;}
-
-.new-badge{position:absolute;top:8px;right:8px;z-index:10;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:1.5px;color:#fff;background:var(--grn);padding:2px 6px;box-shadow:0 0 10px rgba(16,185,129,.6);border-radius:2px;animation:newbadge 2s ease-in-out infinite;}
-@keyframes newbadge{0%,100%{box-shadow:0 0 10px rgba(16,185,129,.6)}50%{box-shadow:0 0 20px rgba(16,185,129,.9),0 0 35px rgba(16,185,129,.4)}}
-@keyframes rpl{0%{transform:scale(0);opacity:.35}100%{transform:scale(4);opacity:0}}
-.rpl{position:absolute;width:60px;height:60px;border-radius:50%;background:rgba(77,159,255,.12);pointer-events:none;animation:rpl .55s ease-out forwards;transform-origin:center;z-index:5;}
-@keyframes scanmove{0%{background-position:0 -40px}100%{background-position:0 200px}}
-
-/* ══ FOOTER ══ */
-footer{
-  background:rgba(8,15,40,.95);border-top:1px solid var(--bc);
-  padding:0;
-  font-family:'Space Mono',monospace;
-  box-shadow:0 0 20px rgba(77,159,255,.05);
-}
-.footer-bottom{
-  padding:7px 14px;
-  display:flex;justify-content:space-between;flex-wrap:wrap;gap:5px;
-}
-.fl{font-size:10px;color:rgba(150,205,255,.85);letter-spacing:1.5px;text-transform:uppercase}
-.fl span{color:var(--cyan);text-shadow:0 0 8px rgba(77,159,255,.4)}
-.fr{font-size:10px;color:rgba(150,205,255,.7);letter-spacing:1px}
-
-/* ══ FLOATING BACK BUTTON ══ */
-#floatback{position:fixed;bottom:20px;right:16px;z-index:9999;display:none;align-items:center;gap:6px;padding:9px 14px;
-  font-family:'Space Mono',monospace;font-size:11px;font-weight:700;letter-spacing:2px;
-  color:#fff;background:rgba(96,165,250,.85);border:none;cursor:pointer;border-radius:4px;
-  box-shadow:0 0 20px rgba(96,165,250,.5),0 0 40px rgba(96,165,250,.2);
-  animation:floatpulse 2s ease-in-out infinite;transition:transform .15s;
-  touch-action:manipulation;}
-#floatback:hover{transform:scale(1.06)}
-#floatback.visible{display:flex}
-@keyframes floatpulse{
-  0%,100%{box-shadow:0 0 20px rgba(96,165,250,.5),0 0 40px rgba(96,165,250,.2)}
-  50%{box-shadow:0 0 30px rgba(96,165,250,.8),0 0 56px rgba(96,165,250,.4)}}
-#floatback .kbhint{font-size:6px;opacity:.7;letter-spacing:1px;border:1px solid rgba(255,255,255,.3);padding:1px 4px;border-radius:2px;}
-
-/* ══ IFRAME VIEWER ══ */
-#viewer{position:fixed;inset:0;z-index:500;display:none;flex-direction:column;background:var(--bg);}
-#viewer.open{display:flex}
-#vbar{background:rgba(8,18,50,.97);border-bottom:1px solid rgba(96,165,250,.25);padding:6px 12px;display:flex;align-items:center;gap:10px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;flex-shrink:0;box-shadow:0 0 20px rgba(77,159,255,.1);position:relative;z-index:501;}
-#vtitle{color:var(--cyan);font-weight:700;font-size:12px;text-shadow:0 0 12px rgba(77,159,255,.5);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-#vopen{padding:7px 16px;font-size:11px;letter-spacing:2px;font-family:'Space Mono',monospace;text-transform:uppercase;border:2px solid #60a5fa;color:#ffffff;background:rgba(96,165,250,.25);cursor:pointer;transition:all .2s;touch-action:manipulation;border-radius:6px;font-weight:700;box-shadow:0 0 14px rgba(96,165,250,.4),0 0 28px rgba(96,165,250,.15);text-shadow:0 0 8px rgba(96,165,250,.8);}
-#vopen:hover{background:rgba(96,165,250,.45);box-shadow:0 0 22px rgba(96,165,250,.7),0 0 44px rgba(96,165,250,.3);transform:scale(1.04);}
-#vclose{padding:7px 16px;font-size:11px;letter-spacing:2px;font-family:'Space Mono',monospace;text-transform:uppercase;border:2px solid #4ade80;color:#ffffff;background:rgba(74,222,128,.22);cursor:pointer;transition:all .2s;border-radius:6px;touch-action:manipulation;font-weight:700;box-shadow:0 0 14px rgba(74,222,128,.4),0 0 28px rgba(74,222,128,.15);text-shadow:0 0 8px rgba(74,222,128,.8);}
-#vclose:hover{background:rgba(74,222,128,.4);box-shadow:0 0 22px rgba(74,222,128,.7),0 0 44px rgba(74,222,128,.3);transform:scale(1.04);}
-#vframe-wrap{flex:1;width:100%;background:#000;position:relative;overflow:hidden;}
-#vload{position:absolute;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;pointer-events:none;transition:opacity .4s;}
-#vload.hidden{opacity:0}
-.lspinner{width:36px;height:36px;border-radius:50%;border:2px solid rgba(77,159,255,.1);border-top-color:var(--cyan);animation:spin 1s linear infinite;box-shadow:0 0 16px rgba(77,159,255,.3);}
-@keyframes spin{to{transform:rotate(360deg)}}
-.ltxt{font-family:'Space Mono',monospace;font-size:11px;color:var(--t3);letter-spacing:3px}
-
-/* ═══════════════════════════════════════════════
-   RESPONSIVE
-   ═══════════════════════════════════════════════ */
-@media(min-width:1280px){
-  .wc{min-width:100px;}.wc-time{font-size:17px;}.wc-country{font-size:14px;}
-  .bname{font-size:18px;}.logo{width:46px;height:46px;font-size:20px;}
-  .mbar-item{min-width:110px;}.mbar-val{font-size:17px;}.mbar-chg{font-size:12px;}
-  .sb .v{font-size:18px;}.sc-card-name{font-size:15px;}.sc-card-desc{font-size:13px;}
-  .groups{margin:14px 18px 18px;}.sec{padding:11px 18px 9px;}
-  .footer-bottom{padding:9px 18px;}
-}
-@media(max-width:959px){
-  .stats{grid-template-columns:repeat(2,1fr);}
-  .sc-cards{grid-template-columns:repeat(2,1fr);}
-  .sc-cards-4{grid-template-columns:repeat(2,1fr);}
-  .wc#wc-hkt,.wc#wc-jst{display:none;}
-}
-@media(max-width:767px){
-  header{flex-wrap:wrap;padding:8px 12px 6px;gap:6px;}
-  .brand{order:1;flex:1;}.hright{order:2;}.wclocks{order:3;width:100%;}
-  .sc-cards{grid-template-columns:repeat(2,1fr);}
-  .sc-cards-4{grid-template-columns:repeat(2,1fr);}
-}
-@media(max-width:599px){
-  .tb{padding:3px 10px;}header{padding:8px 10px 6px;}.brand{gap:8px;}
-  .logo{width:34px;height:34px;font-size:15px;}.bname{font-size:11px;letter-spacing:.5px;}
-  .bsub{display:none;}.pill.p{display:none;}
-  .wc{min-width:72px;}.wc-time{font-size:12px;}.wc-country{font-size:10px;}.wc-flag{font-size:11px;}
-  .wc#wc-hkt,.wc#wc-jst{display:none;}
-  .mbar-item{min-width:84px;padding:5px 10px;}.mbar-val{font-size:12px;}
-  .tkr{display:none;}.stats{grid-template-columns:repeat(2,1fr);}
-  .groups{margin:8px 8px 12px;}
-  .sc-cards,.sc-cards-4{grid-template-columns:1fr;}
-  .footer-bottom{padding:7px 10px;flex-direction:column;}
-}
-@media(max-width:380px){.bname{font-size:10px;}.wc-time{font-size:11px;}.wc-country{font-size:9px;}}
-@media(hover:none){.sc-card:hover{background:transparent;}.sc-card:active{background:rgba(0,245,255,.04);}}
-@supports(padding-bottom:env(safe-area-inset-bottom)){
-  footer{padding-bottom:env(safe-area-inset-bottom);}
-  #floatback{bottom:calc(20px + env(safe-area-inset-bottom));}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krishna Markets Hub</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #0e0e0e; color: #ddd; }
+        h1 { color: gold; text-align: center; }
+        .last-updated { text-align: center; margin-bottom: 20px; color: #aaa; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 20px; }
+        .card { background: #1e1e1e; border-radius: 8px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .card h3 { margin: 0 0 10px; display: flex; align-items: center; gap: 10px; }
+        .price { font-size: 1.4em; font-weight: bold; }
+        .chg.positive { color: #4caf50; }
+        .chg.negative { color: #f44336; }
+        .pcr { padding: 3px 8px; border-radius: 4px; font-weight: bold; }
+        .pcr.bull { background: #1b5e20; color: white; }
+        .pcr.bear { background: #b71c1c; color: white; }
+        .pcr.neutral { background: #ff8f00; color: white; }
+        .macd { display: flex; gap: 15px; font-size: 0.9em; margin: 10px 0; }
+        .chart-container { width: 100%; height: 200px; margin-top: 10px; }
+    </style>
+    <!-- Lightweight Charts -->
+    <script src="https://unpkg.com/lightweight-charts@4.0.1/dist/lightweight-charts.standalone.production.js"></script>
 </head>
 <body>
-<div id="scan"></div>
-<div id="app">
+    <h1>🕉️ Krishna Markets Intelligence Hub</h1>
+    <div class="last-updated" id="lastUpdated">Loading...</div>
+    <div class="grid" id="cards"></div>
 
-<!-- ══ TOPBAR ══ -->
-<div class="tb">
-  <div class="tb-l">NIFTY INDIAN <span class="ver">MARKETS HUB // LIVE</span></div>
-  <div class="tb-r">
-    <span class="live"><span class="dot"></span>SIGNAL_OK</span>
-    <span>IST <span class="v" id="ct">--:--:--</span></span>
-  </div>
-</div>
+    <script>
+        async function loadData() {
+            const res = await fetch('data.json');
+            const json = await res.json();
+            document.getElementById('lastUpdated').innerText = `Last Updated: ${new Date(json.updated).toLocaleString()}`;
 
-<!-- ══ HEADER ══ -->
-<header>
-  <div class="brand">
-    <div class="logo">📊</div>
-    <div>
-      <div class="bname">NIFTY Indian <span>Markets HUB</span></div>
-      <div class="bsub">Intelligence Hub · 10 Nodes Active</div>
-    </div>
-  </div>
+            const container = document.getElementById('cards');
+            container.innerHTML = '';
 
-  <div class="wclocks" id="wclocks">
-    <div class="wc" id="wc-ist">
-      <div class="wc-top"><div class="wc-flag">🇮🇳</div><div class="wc-country">INDIA</div><div class="wc-status-dot"></div></div>
-      <div class="wc-bot"><div class="wc-time" id="wt-ist">--:--:--</div><div class="wc-zone">IST</div></div>
-    </div>
-    <div class="wc" id="wc-sgt">
-      <div class="wc-top"><div class="wc-flag">🇸🇬</div><div class="wc-country">SINGAPORE</div><div class="wc-status-dot"></div></div>
-      <div class="wc-bot"><div class="wc-time" id="wt-sgt">--:--:--</div><div class="wc-zone">SGT</div></div>
-    </div>
-    <div class="wc" id="wc-hkt">
-      <div class="wc-top"><div class="wc-flag">🇭🇰</div><div class="wc-country">HONG KONG</div><div class="wc-status-dot"></div></div>
-      <div class="wc-bot"><div class="wc-time" id="wt-hkt">--:--:--</div><div class="wc-zone">HKT</div></div>
-    </div>
-    <div class="wc" id="wc-gmt">
-      <div class="wc-top"><div class="wc-flag">🇬🇧</div><div class="wc-country">LONDON</div><div class="wc-status-dot"></div></div>
-      <div class="wc-bot"><div class="wc-time" id="wt-gmt">--:--:--</div><div class="wc-zone" id="wz-gmt">GMT</div></div>
-    </div>
-    <div class="wc" id="wc-cet">
-      <div class="wc-top"><div class="wc-flag">🇪🇺</div><div class="wc-country">FRANKFURT</div><div class="wc-status-dot"></div></div>
-      <div class="wc-bot"><div class="wc-time" id="wt-cet">--:--:--</div><div class="wc-zone" id="wz-cet">CET</div></div>
-    </div>
-    <div class="wc" id="wc-est">
-      <div class="wc-top"><div class="wc-flag">🇺🇸</div><div class="wc-country">NEW YORK</div><div class="wc-status-dot"></div></div>
-      <div class="wc-bot"><div class="wc-time" id="wt-est">--:--:--</div><div class="wc-zone" id="wz-est">EST</div></div>
-    </div>
-    <div class="wc" id="wc-jst">
-      <div class="wc-top"><div class="wc-flag">🇯🇵</div><div class="wc-country">TOKYO</div><div class="wc-status-dot"></div></div>
-      <div class="wc-bot"><div class="wc-time" id="wt-jst">--:--:--</div><div class="wc-zone">JST</div></div>
-    </div>
-  </div>
+            for (const [key, value] of Object.entries(json.data)) {
+                const card = document.createElement('div');
+                card.className = 'card';
 
-  <div class="hright">
-    <div class="pill g"><span class="dot"></span>ALL LIVE</div>
-    <div class="pill p">NSE · BSE · NYSE</div>
-  </div>
-</header>
+                // Header
+                const header = document.createElement('h3');
+                header.innerHTML = `${key} <span class="price">${value.price}</span> <span class="chg ${value.chgPct >= 0 ? 'positive' : 'negative'}">(${value.chgPct > 0 ? '+' : ''}${value.chgPct}%)</span>`;
+                card.appendChild(header);
 
-<!-- ══ LIVE MARKET BAR ══ -->
-<div class="mbar" id="mbar">
-  <div class="mbar-updated" id="mbar-ts"></div>
-  <div class="mbar-row">
-    <div class="mbar-label india">
-      <div class="mbar-label-flag">🇮🇳</div>
-      <div class="mbar-label-txt">INDIA</div>
-    </div>
-    <div class="mbar-items" id="mbar-india">
-      <div class="mbar-item" id="mi-n50" style="--ic:#4d9fff;--is:rgba(77,159,255,.3);">
-        <div class="mbar-name">NIFTY 50</div><div class="mbar-val" id="mv-n50">···</div>
-        <div class="mbar-chg" id="mc-n50">···</div><div class="mbar-src" id="ms-n50"></div>
-      </div>
-      <div class="mbar-item" id="mi-bn" style="--ic:#34d399;--is:rgba(16,185,129,.3);">
-        <div class="mbar-name">BANK NIFTY</div><div class="mbar-val" id="mv-bn">···</div>
-        <div class="mbar-chg" id="mc-bn">···</div><div class="mbar-src" id="ms-bn"></div>
-      </div>
-      <div class="mbar-item is-vix" id="mi-vix" style="--ic:#ffd080;--is:rgba(255,208,128,.3);">
-        <div class="mbar-name">INDIA VIX</div><div class="mbar-val" id="mv-vix">···</div>
-        <div class="mbar-chg vix" id="mc-vix">···</div><div class="mbar-src" id="ms-vix"></div>
-      </div>
-      <div class="mbar-item" id="mi-fn" style="--ic:#10b981;--is:rgba(16,185,129,.3);">
-        <div class="mbar-name">FINNIFTY</div><div class="mbar-val" id="mv-fn">···</div>
-        <div class="mbar-chg" id="mc-fn">···</div><div class="mbar-src" id="ms-fn"></div>
-      </div>
-      <div class="mbar-item" id="mi-sx" style="--ic:rgba(255,153,0,.8);--is:rgba(255,153,0,.2);">
-        <div class="mbar-name">SENSEX</div><div class="mbar-val" id="mv-sx">···</div>
-        <div class="mbar-chg" id="mc-sx">···</div><div class="mbar-src" id="ms-sx"></div>
-      </div>
-    </div>
-  </div>
-  <div class="mbar-divider"></div>
-  <div class="mbar-row">
-    <div class="mbar-label global">
-      <div class="mbar-label-flag">🌐</div>
-      <div class="mbar-label-txt">GLOBAL</div>
-    </div>
-    <div class="mbar-items" id="mbar-global">
-      <div class="mbar-item" id="mi-sp" style="--ic:#3344cc;--is:rgba(51,68,204,.3);">
-        <div class="mbar-name">S&amp;P 500</div><div class="mbar-val" id="mv-sp">···</div>
-        <div class="mbar-chg" id="mc-sp">···</div><div class="mbar-src" id="ms-sp"></div>
-      </div>
-      <div class="mbar-item" id="mi-ndq" style="--ic:#6688ff;--is:rgba(102,136,255,.35);">
-        <div class="mbar-name">NASDAQ</div><div class="mbar-val" id="mv-ndq">···</div>
-        <div class="mbar-chg" id="mc-ndq">···</div><div class="mbar-src" id="ms-ndq"></div>
-      </div>
-      <div class="mbar-item" id="mi-dji" style="--ic:#8899ff;--is:rgba(136,153,255,.2);">
-        <div class="mbar-name">DOW JONES</div><div class="mbar-val" id="mv-dji">···</div>
-        <div class="mbar-chg" id="mc-dji">···</div><div class="mbar-src" id="ms-dji"></div>
-      </div>
-      <div class="mbar-item" id="mi-inr" style="--ic:#ffd080;--is:rgba(255,208,128,.25);">
-        <div class="mbar-name">USD/INR</div><div class="mbar-val" id="mv-inr">···</div>
-        <div class="mbar-chg" id="mc-inr">···</div><div class="mbar-src" id="ms-inr"></div>
-      </div>
-      <div class="mbar-item" id="mi-crude" style="--ic:rgba(255,160,0,.9);--is:rgba(255,160,0,.25);">
-        <div class="mbar-name">CRUDE OIL</div><div class="mbar-val" id="mv-crude">···</div>
-        <div class="mbar-chg" id="mc-crude">···</div><div class="mbar-src" id="ms-crude"></div>
-      </div>
-      <div class="mbar-item" id="mi-gold" style="--ic:#ffd700;--is:rgba(255,215,0,.35);">
-        <div class="mbar-name">GOLD</div><div class="mbar-val" id="mv-gold">···</div>
-        <div class="mbar-chg" id="mc-gold">···</div><div class="mbar-src" id="ms-gold"></div>
-      </div>
-      <div class="mbar-item" id="mi-silver" style="--ic:#c0c0c0;--is:rgba(192,192,192,.3);">
-        <div class="mbar-name">SILVER</div><div class="mbar-val" id="mv-silver">···</div>
-        <div class="mbar-chg" id="mc-silver">···</div><div class="mbar-src" id="ms-silver"></div>
-      </div>
-    </div>
-  </div>
-</div>
+                // PCR (if available)
+                if (value.pcr !== undefined && value.pcr !== null) {
+                    const pcrDiv = document.createElement('div');
+                    let pcrClass = 'neutral';
+                    let pcrText = 'Neutral';
+                    if (value.pcr < 0.7) { pcrClass = 'bull'; pcrText = 'Bullish'; }
+                    else if (value.pcr > 1.2) { pcrClass = 'bear'; pcrText = 'Bearish'; }
+                    pcrDiv.innerHTML = `PCR: <span class="pcr ${pcrClass}">${value.pcr} (${pcrText})</span>`;
+                    card.appendChild(pcrDiv);
+                }
 
-<!-- ══ TICKER ══ -->
-<div class="tkr"><div class="tkr-t" id="tkr"></div></div>
+                // MACD
+                if (value.macd) {
+                    const macdDiv = document.createElement('div');
+                    macdDiv.className = 'macd';
+                    macdDiv.innerHTML = `
+                        <span>MACD: ${value.macd.macd}</span>
+                        <span>Signal: ${value.macd.signal}</span>
+                        <span>Hist: <span style="color:${value.macd.histogram >=0 ? '#4caf50' : '#f44336'}">${value.macd.histogram}</span></span>
+                    `;
+                    card.appendChild(macdDiv);
+                }
 
-<!-- ══ STATS ══ -->
-<div class="stats">
-  <div class="sb" style="--sc:#4d9fff;--sg:'10'">
-    <div class="l">Nodes Online</div><div class="v">10</div>
-    <div class="s">All dashboards active</div>
-  </div>
-  <div class="sb" style="--sc:#10b981;--sg:'IN'">
-    <div class="l">Indian Markets</div><div class="v">NSE · BSE</div>
-    <div class="s">Nifty · Sensex · OPT</div>
-  </div>
-  <div class="sb" style="--sc:#34d399;--sg:'US'">
-    <div class="l">US Markets</div><div class="v">S&amp;P 500</div>
-    <div class="s">500 stocks tracked</div>
-  </div>
-  <div class="sb" style="--sc:#818cf8;--sg:'◈'">
-    <div class="l">Last Node</div>
-    <div class="v" id="lc" style="font-size:11px;padding-top:2px">—</div>
-    <div class="s">Session log</div>
-  </div>
-</div>
+                // Chart container
+                const chartDiv = document.createElement('div');
+                chartDiv.className = 'chart-container';
+                chartDiv.id = `chart-${key}`;
+                card.appendChild(chartDiv);
+                container.appendChild(card);
 
-<!-- ══ SECTION ══ -->
-<div class="sec">
-  <div class="sec-bar"></div>
-  <div class="sec-txt">▶ Select Dashboard Node</div>
-  <div class="sec-bdg">10/10 ONLINE</div>
-</div>
+                // Render chart if history exists
+                if (value.history && value.history.length > 0) {
+                    const chart = LightweightCharts.createChart(chartDiv, {
+                        width: chartDiv.clientWidth,
+                        height: 200,
+                        layout: { textColor: '#d1d4dc', backgroundColor: '#1e1e1e' },
+                        grid: { vertLines: { color: '#2b2b2b' }, horzLines: { color: '#2b2b2b' } },
+                        timeScale: { timeVisible: true, borderColor: '#2b2b2b' },
+                    });
+                    const candlestickSeries = chart.addCandlestickSeries({
+                        upColor: '#4caf50', downColor: '#f44336', borderVisible: false,
+                        wickUpColor: '#4caf50', wickDownColor: '#f44336',
+                    });
+                    // Convert history to chart format
+                    const chartData = value.history.map(h => ({
+                        time: h.date,  // expects 'YYYY-MM-DD'
+                        open: h.o,
+                        high: h.h,
+                        low: h.l,
+                        close: h.c,
+                    }));
+                    candlestickSeries.setData(chartData);
+                    chart.timeScale().fitContent();
+                } else {
+                    chartDiv.innerText = 'No historical data';
+                }
+            }
+        }
+        loadData();
 
-<!-- ══ GROUPED PODS ══ -->
-<div class="groups">
-
-  <!-- GROUP 1 -->
-  <div class="sc-group" style="--ga:rgba(96,165,250,.18);--gb:rgba(96,165,250,.04);--gc:#60a5fa;">
-    <div class="sc-inner">
-      <div class="sc-head">
-        <div class="sc-head-hex" style="border-color:#4d9fff;box-shadow:0 0 14px rgba(77,159,255,.25);">📊</div>
-        <div class="sc-head-info">
-          <div class="sc-head-tag">GROUP 01 // NSE ANALYTICS SUITE</div>
-          <div class="sc-head-name" style="color:#ff9900;">NIFTY INTELLIGENCE</div>
-        </div>
-        <div class="sc-head-right">
-          <div class="sc-head-status"><span class="dot"></span>4 NODES ONLINE</div>
-          <div class="sc-head-nodes">NSE · INDIA MARKETS</div>
-        </div>
-      </div>
-      <div class="sc-cards-4">
-        <a class="sc-card" href="https://krishnateja08.github.io/Nifty_50_Stock_Analyzer/" onclick="go(event,'Nifty 50 Analyzer')" style="--cc:#60a5fa;">
-          <div class="corner-tl"></div><div class="corner-br"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar"></div><div class="sc-card-glow"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">📈
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">ANALYSIS</div>
-              <div class="sc-card-pulse"></div>
-            </div>
-            <div class="sc-card-name">Nifty 50 Analyzer</div>
-            <div class="sc-card-desc">Deep technical analysis of all Nifty 50 stocks — RSI, MACD, EMA, support &amp; resistance levels.</div>
-            <div class="sc-card-footer"><span class="sc-card-tag">NSE · NIFTY 50</span><div class="sc-card-btn"><div class="sc-card-btn-line"></div>LAUNCH</div></div>
-          </div>
-        </a>
-        <a class="sc-card" href="https://krishnateja08.github.io/Nifty_Indices_scanner/" onclick="go(event,'Nifty Indices Scanner')" style="--cc:#60a5fa;">
-          <div class="corner-tl"></div><div class="corner-br"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar"></div><div class="sc-card-glow"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">🔍
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">SCANNER</div>
-              <div class="sc-card-pulse"></div>
-            </div>
-            <div class="sc-card-name">Nifty Indices Scanner</div>
-            <div class="sc-card-desc">Real-time scanner across all Nifty indices — momentum, breakouts and sector rotation signals.</div>
-            <div class="sc-card-footer"><span class="sc-card-tag">NSE · INDICES</span><div class="sc-card-btn"><div class="sc-card-btn-line"></div>LAUNCH</div></div>
-          </div>
-        </a>
-        <a class="sc-card" href="https://krishnateja08.github.io/Alphascreener/" onclick="go(event,'AlphaScreener')" style="--cc:#60a5fa;">
-          <div class="corner-tl" style="border-color:#4d9fff;"></div><div class="corner-br" style="border-color:#4d9fff;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar"></div><div class="sc-card-glow"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">🎛️
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">SCREENER</div>
-            </div>
-            <div class="sc-card-name">AlphaScreener</div>
-            <div class="sc-card-desc">Multi-timeframe stock &amp; index screener — India &amp; USA, sector filters, Nifty 50, Bank Nifty &amp; Fin Nifty.</div>
-            <div class="sc-card-footer"><span class="sc-card-tag">NSE · USA · MULTI-TF</span><div class="sc-card-btn"><div class="sc-card-btn-line"></div>LAUNCH</div></div>
-          </div>
-        </a>
-        <a class="sc-card" href="https://krishnateja08.github.io/FII-DII_Pulse/" onclick="go(event,'FII/DII Pulse')" style="--cc:#60a5fa;">
-          <div class="corner-tl" style="border-color:#4d9fff;"></div><div class="corner-br" style="border-color:#4d9fff;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar"></div><div class="sc-card-glow"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">🏛️
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">INSTITUTIONAL</div>
-            </div>
-            <div class="sc-card-name">FII / DII Pulse</div>
-            <div class="sc-card-desc">Sector-wise institutional activity — FII &amp; DII bulk/block deals with technical signals &amp; RSI.</div>
-            <div class="sc-card-footer"><span class="sc-card-tag">NSE · BULK DEALS</span><div class="sc-card-btn"><div class="sc-card-btn-line"></div>LAUNCH</div></div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <!-- GROUP 2 — OPTIONS & DERIVATIVES DESK (4 NODES) -->
-  <div class="sc-group" style="--ga:rgba(16,185,129,.2);--gb:rgba(16,185,129,.04);--gc:#10b981;">
-    <div class="sc-inner">
-      <div class="sc-head" style="background:linear-gradient(90deg,rgba(6,13,30,.99),rgba(6,13,30,.85));">
-        <div class="sc-head-hex" style="border-color:#10b981;box-shadow:0 0 14px rgba(16,185,129,.25);background:linear-gradient(135deg,rgba(16,185,129,.1),rgba(16,185,129,.04));">⛓️</div>
-        <div class="sc-head-info">
-          <div class="sc-head-tag">GROUP 02 // OPTIONS &amp; DERIVATIVES DESK</div>
-          <div class="sc-head-name" style="color:#34d399;text-shadow:0 0 12px rgba(16,185,129,.4);">OPTIONS COMMAND</div>
-        </div>
-        <div class="sc-head-right">
-          <!-- ✅ Updated node count: 3 → 4 -->
-          <div class="sc-head-status"><span class="dot"></span>4 NODES ONLINE</div>
-          <div class="sc-head-nodes">NSE · DERIVATIVES</div>
-        </div>
-      </div>
-      <div class="sc-cards-4">
-
-        <!-- CARD 1: Nifty Option Chain -->
-        <a class="sc-card" href="https://krishnateja08.github.io/Nifty_option_chain/" onclick="go(event,'Nifty Option Chain')" style="--cc:#34d399;">
-          <div class="corner-tl" style="border-color:#34d399;"></div><div class="corner-br" style="border-color:#34d399;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar" style="background:linear-gradient(90deg,#34d399,transparent);box-shadow:0 0 10px #34d399;"></div>
-            <div class="sc-card-glow" style="background:radial-gradient(rgba(16,185,129,.08),transparent 70%);"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">⛓️
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">OPTIONS</div>
-            </div>
-            <div class="sc-card-name" style="color:#34d399;text-shadow:0 0 10px rgba(16,185,129,.3);">Nifty Option Chain</div>
-            <div class="sc-card-desc">Live option chain analysis — OI buildup, PCR ratio, max pain and key strike price levels.</div>
-            <div class="sc-card-footer" style="border-top-color:rgba(16,185,129,.1);">
-              <span class="sc-card-tag" style="border-color:rgba(16,185,129,.15);">NSE · OPTIONS</span>
-              <div class="sc-card-btn" style="color:#22cc22;"><div class="sc-card-btn-line" style="background:#22cc22;"></div>LAUNCH</div>
-            </div>
-          </div>
-        </a>
-
-        <!-- ✅ NEW CARD 2: Bank / Finance Option Chain -->
-        <a class="sc-card" href="https://krishnateja08.github.io/BankNifty_options/" onclick="go(event,'Bank/Finance Option Chain')" style="--cc:#34d399;">
-          <div class="corner-tl" style="border-color:#34d399;"></div><div class="corner-br" style="border-color:#34d399;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar" style="background:linear-gradient(90deg,#34d399,transparent);box-shadow:0 0 10px #34d399;"></div>
-            <div class="sc-card-glow" style="background:radial-gradient(rgba(16,185,129,.08),transparent 70%);"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">🏦
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">BANK · FIN OPT</div>
-            </div>
-            <div class="sc-card-name" style="color:#34d399;text-shadow:0 0 10px rgba(16,185,129,.3);">Bank/Finance Option Chain</div>
-            <div class="sc-card-desc">Live Bank Nifty &amp; Fin Nifty option chain — OI analysis, PCR, max pain and key strike levels.</div>
-            <div class="sc-card-footer" style="border-top-color:rgba(16,185,129,.1);">
-              <span class="sc-card-tag" style="border-color:rgba(16,185,129,.15);">NSE · BANK · FINNIFTY</span>
-              <div class="sc-card-btn" style="color:#22cc22;"><div class="sc-card-btn-line" style="background:#22cc22;"></div>LAUNCH</div>
-            </div>
-          </div>
-        </a>
-
-        <!-- CARD 3: Option Strategy Builder -->
-        <a class="sc-card" href="https://krishnateja08.github.io/optionstrategybuilder/" onclick="go(event,'Strategy Builder')" style="--cc:#34d399;">
-          <div class="corner-tl" style="border-color:#34d399;"></div><div class="corner-br" style="border-color:#34d399;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar" style="background:linear-gradient(90deg,#34d399,transparent);box-shadow:0 0 10px #34d399;"></div>
-            <div class="sc-card-glow" style="background:radial-gradient(rgba(16,185,129,.06),transparent 70%);"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">🧮
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">STRATEGY</div>
-            </div>
-            <div class="sc-card-name" style="color:#34d399;text-shadow:0 0 10px rgba(16,185,129,.3);">Option Strategy Builder</div>
-            <div class="sc-card-desc">Build and visualise options strategies — P&amp;L charts, Greeks, breakeven for any strike &amp; expiry.</div>
-            <div class="sc-card-footer" style="border-top-color:rgba(16,185,129,.1);">
-              <span class="sc-card-tag" style="border-color:rgba(16,185,129,.15);">NSE · P&amp;L · GREEKS</span>
-              <div class="sc-card-btn" style="color:#22cc22;"><div class="sc-card-btn-line" style="background:#22cc22;"></div>LAUNCH</div>
-            </div>
-          </div>
-        </a>
-
-        <!-- CARD 4: S/R Strike Planner -->
-        <a class="sc-card" href="https://krishnateja08.github.io/Strategic_Nodes/" onclick="go(event,'S/R Strike Planner')" style="--cc:#34d399;">
-          <div class="corner-tl" style="border-color:#34d399;"></div><div class="corner-br" style="border-color:#34d399;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar" style="background:linear-gradient(90deg,#34d399,transparent);box-shadow:0 0 10px #34d399;"></div>
-            <div class="sc-card-glow" style="background:radial-gradient(rgba(16,185,129,.06),transparent 70%);"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">🎯
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">S/R LEVELS</div>
-            </div>
-            <div class="sc-card-name" style="color:#34d399;text-shadow:0 0 10px rgba(16,185,129,.3);">S/R Strike Planner</div>
-            <div class="sc-card-desc">Identify key support &amp; resistance strike zones — plan entries, exits and hedge levels with precision.</div>
-            <div class="sc-card-footer" style="border-top-color:rgba(16,185,129,.1);">
-              <span class="sc-card-tag" style="border-color:rgba(16,185,129,.15);">NSE · S/R · STRIKES</span>
-              <div class="sc-card-btn" style="color:#22cc22;"><div class="sc-card-btn-line" style="background:#22cc22;"></div>LAUNCH</div>
-            </div>
-          </div>
-        </a>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- GROUP 3 -->
-  <div class="sc-group" style="--ga:rgba(102,136,255,.2);--gb:rgba(102,136,255,.04);--gc:#6688ff;">
-    <div class="sc-inner">
-      <div class="sc-head" style="background:linear-gradient(90deg,rgba(6,13,30,.99),rgba(6,13,30,.85));">
-        <div class="sc-head-hex" style="border-color:#6688ff;box-shadow:0 0 14px rgba(102,136,255,.2);background:linear-gradient(135deg,rgba(102,136,255,.1),rgba(102,136,255,.04));">🌐</div>
-        <div class="sc-head-info">
-          <div class="sc-head-tag">GROUP 03 // MACRO &amp; GLOBAL MARKETS</div>
-          <div class="sc-head-name" style="color:#818cf8;text-shadow:0 0 12px rgba(102,136,255,.35);">GLOBAL INTELLIGENCE</div>
-        </div>
-        <div class="sc-head-right">
-          <div class="sc-head-status"><span class="dot"></span>3 NODES ONLINE</div>
-          <div class="sc-head-nodes">NYSE · GLOBAL</div>
-        </div>
-      </div>
-      <div class="sc-cards">
-        <a class="sc-card" href="https://krishnateja08.github.io/USA-SP500-Stocks-Review/" onclick="go(event,'S&P 500 Review')" style="--cc:#6688ff;">
-          <div class="corner-tl" style="border-color:#6688ff;"></div><div class="corner-br" style="border-color:#6688ff;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar" style="background:linear-gradient(90deg,#6688ff,transparent);box-shadow:0 0 10px #6688ff;"></div>
-            <div class="sc-card-glow" style="background:radial-gradient(rgba(51,68,204,.08),transparent 70%);"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">🗽
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">GLOBAL</div>
-            </div>
-            <div class="sc-card-name" style="color:#6688ff;text-shadow:0 0 10px rgba(51,68,204,.3);">USA S&amp;P 500 Review</div>
-            <div class="sc-card-desc">Comprehensive S&amp;P 500 stock review — US market analysis, sector performance and signals.</div>
-            <div class="sc-card-footer" style="border-top-color:rgba(51,68,204,.1);">
-              <span class="sc-card-tag" style="border-color:rgba(51,68,204,.2);">NYSE · S&amp;P 500</span>
-              <div class="sc-card-btn" style="color:#6688ff;"><div class="sc-card-btn-line" style="background:#6688ff;"></div>LAUNCH</div>
-            </div>
-          </div>
-        </a>
-        <a class="sc-card" href="https://krishnateja08.github.io/Global_Market_News/" onclick="go(event,'Global Market News')" style="--cc:#ffd080;">
-          <div class="corner-tl" style="border-color:#ffd080;"></div><div class="corner-br" style="border-color:#ffd080;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar" style="background:linear-gradient(90deg,#ffd080,transparent);box-shadow:0 0 10px #ffd080;"></div>
-            <div class="sc-card-glow" style="background:radial-gradient(rgba(255,208,128,.07),transparent 70%);"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap"><div class="sc-card-ico">🌍
-              <div class="sc-card-pulse"></div>
-            </div></div>
-              <div class="sc-card-label">INTELLIGENCE</div>
-            </div>
-            <div class="sc-card-name" style="color:#ffd080;text-shadow:0 0 10px rgba(255,208,128,.3);">Global Market News</div>
-            <div class="sc-card-desc">Curated global market news — macro events, earnings, central bank decisions and market moves.</div>
-            <div class="sc-card-footer" style="border-top-color:rgba(255,208,128,.1);">
-              <span class="sc-card-tag" style="border-color:rgba(255,208,128,.2);">GLOBAL · NEWS</span>
-              <div class="sc-card-btn" style="color:#ffd080;"><div class="sc-card-btn-line" style="background:#ffd080;"></div>LAUNCH</div>
-            </div>
-          </div>
-        </a>
-        <a class="sc-card" href="https://krishnateja08.github.io/Stocks_News_Analyzer/" onclick="go(event,'Stocks News Analyzer')" style="--cc:#a78bfa;">
-          <div class="corner-tl" style="border-color:#a78bfa;"></div><div class="corner-br" style="border-color:#a78bfa;"></div>
-          <div class="sc-card-inner">
-            <div class="sc-card-topbar" style="background:linear-gradient(90deg,#a78bfa,transparent);box-shadow:0 0 10px #a78bfa;"></div>
-            <div class="sc-card-glow" style="background:radial-gradient(rgba(167,139,250,.08),transparent 70%);"></div>
-            <div class="sc-card-top">
-              <div class="sc-card-ico-wrap" style="border-color:rgba(167,139,250,.35);"><div class="sc-card-ico">📰
-              <div class="sc-card-pulse" style="background:#a78bfa;"></div>
-            </div></div>
-              <div class="sc-card-label" style="border-color:rgba(167,139,250,.25);color:rgba(167,139,250,.85);">NEWS · AI</div>
-              <div class="sc-card-pulse" style="background:#a78bfa;"></div>
-            </div>
-            <div class="sc-card-name" style="color:#a78bfa;text-shadow:0 0 10px rgba(167,139,250,.3);">Stocks News Analyzer</div>
-            <div class="sc-card-desc">AI-powered stock news analysis — sentiment scoring, market impact and real-time headline intelligence.</div>
-            <div class="sc-card-footer" style="border-top-color:rgba(167,139,250,.1);">
-              <span class="sc-card-tag" style="border-color:rgba(167,139,250,.2);color:rgba(167,139,250,.6);">GLOBAL · SENTIMENT</span>
-              <div class="sc-card-btn" style="color:#a78bfa;"><div class="sc-card-btn-line" style="background:#a78bfa;"></div>LAUNCH</div>
-            </div>
-          </div>
-        </a>
-      </div>
-    </div>
-  </div>
-
-</div>
-
-<!-- ══ FOOTER ══ -->
-<footer>
-  <div class="footer-bottom">
-    <div class="fl"><span>NIFTY INDIAN MARKETS HUB</span> // DEEP_NAVY v3.0 // 9_NODES_ACTIVE</div>
-    <div class="fr">SELECT_NODE → OPEN // BACK → RETURN_TO_HUB</div>
-  </div>
-</footer>
-
-</div>
-
-<button id="floatback" onclick="closeViewer(false)">← HUB <span class="kbhint">ESC</span></button>
-
-<div id="viewer">
-  <div id="vbar">
-    <div id="vtitle">— NODE VIEWER —</div>
-    <button id="vopen" onclick="openExternal()">↗ OPEN TAB</button>
-    <button id="vclose" onclick="closeViewer(false)">✕ BACK TO HUB</button>
-  </div>
-  <div id="vload"><div class="lspinner"></div><div class="ltxt">LOADING NODE...</div></div>
-  <div id="vframe-wrap"></div>
-</div>
-
-<script>
-/* ══ IST Clock ══ */
-function tick(){
-  var t=new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(new Date());
-  document.getElementById('ct').textContent=t;
-}
-tick();setInterval(tick,1000);
-
-/* ══ WORLD CLOCKS ══ */
-var ZONES=[
-  {id:'ist',timeId:'wt-ist',zoneId:null,tz:'Asia/Kolkata',marketOpen:{h:9,m:15},marketClose:{h:15,m:30}},
-  {id:'sgt',timeId:'wt-sgt',zoneId:null,tz:'Asia/Singapore',marketOpen:{h:6,m:30},marketClose:{h:23,m:30}},
-  {id:'hkt',timeId:'wt-hkt',zoneId:null,tz:'Asia/Hong_Kong',marketOpen:{h:9,m:30},marketClose:{h:16,m:0}},
-  {id:'gmt',timeId:'wt-gmt',zoneId:'wz-gmt',tz:'Europe/London',marketOpen:{h:8,m:0},marketClose:{h:16,m:30}},
-  {id:'cet',timeId:'wt-cet',zoneId:'wz-cet',tz:'Europe/Berlin',marketOpen:{h:9,m:0},marketClose:{h:17,m:30}},
-  {id:'est',timeId:'wt-est',zoneId:'wz-est',tz:'America/New_York',marketOpen:{h:9,m:30},marketClose:{h:16,m:0}},
-  {id:'jst',timeId:'wt-jst',zoneId:null,tz:'Asia/Tokyo',marketOpen:{h:9,m:0},marketClose:{h:15,m:30}}
-];
-function isMarketOpen(zone){
-  var d=new Date(new Date().toLocaleString('en-US',{timeZone:zone.tz}));
-  var day=d.getDay();if(day===0||day===6)return false;
-  var mins=d.getHours()*60+d.getMinutes();
-  return mins>=zone.marketOpen.h*60+zone.marketOpen.m&&mins<zone.marketClose.h*60+zone.marketClose.m;
-}
-function tickWorldClocks(){
-  var now=new Date();
-  ZONES.forEach(function(zone){
-    var el=document.getElementById('wc-'+zone.id);
-    var te=document.getElementById(zone.timeId);
-    var ze=zone.zoneId?document.getElementById(zone.zoneId):null;
-    if(!el||!te)return;
-    var timeStr=new Intl.DateTimeFormat('en-GB',{timeZone:zone.tz,hour:'2-digit',minute:'2-digit',second:'2-digit',hour12:false}).format(now);
-    te.textContent=timeStr;
-    if(ze){
-      if(zone.id==='gmt'){ze.textContent=new Date().toLocaleString('en-US',{timeZone:'Europe/London',timeZoneName:'short'}).split(' ').pop();}
-      else if(zone.id==='cet'){ze.textContent=new Intl.DateTimeFormat('en',{timeZone:zone.tz,timeZoneName:'short'}).format(now).split(', ')[1]||'CET';}
-      else if(zone.id==='est'){ze.textContent=new Date().toLocaleString('en-US',{timeZone:'America/New_York',timeZoneName:'short'}).split(' ').pop();}
-    }
-    var open=isMarketOpen(zone);
-    el.classList.remove('active-market','closed-market');
-    el.classList.add(open?'active-market':'closed-market');
-  });
-}
-tickWorldClocks();setInterval(tickWorldClocks,1000);
-
-/* ══ MARKET DATA ══ */
-var FINNHUB_KEY='d6dmrfhr01qm89pk6ta0d6dmrfhr01qm89pk6tag';
-var MB_MAP=[
-  {id:'n50',valId:'mv-n50',chgId:'mc-n50',srcId:'ms-n50',yfSym:'^NSEI',fhSym:null,nseKey:'NIFTY 50',prefix:'',isVix:false},
-  {id:'bn',valId:'mv-bn',chgId:'mc-bn',srcId:'ms-bn',yfSym:'^NSEBANK',fhSym:null,nseKey:'NIFTY BANK',prefix:'',isVix:false},
-  {id:'vix',valId:'mv-vix',chgId:'mc-vix',srcId:'ms-vix',yfSym:'^INDIAVIX',fhSym:null,nseKey:'INDIA VIX',prefix:'',isVix:true},
-  {id:'fn',valId:'mv-fn',chgId:'mc-fn',srcId:'ms-fn',yfSym:'NIFTY_FIN_SERVICE.NS',fhSym:null,nseKey:'NIFTY FIN SERVICE',prefix:'',isVix:false},
-  {id:'sx',valId:'mv-sx',chgId:'mc-sx',srcId:'ms-sx',yfSym:'^BSESN',fhSym:null,nseKey:'SENSEX',prefix:'',isVix:false},
-  {id:'sp',valId:'mv-sp',chgId:'mc-sp',srcId:'ms-sp',yfSym:'^GSPC',fhSym:'OANDA:SPX500_USD',nseKey:null,prefix:'',isVix:false},
-  {id:'ndq',valId:'mv-ndq',chgId:'mc-ndq',srcId:'ms-ndq',yfSym:'^IXIC',fhSym:'OANDA:NAS100_USD',nseKey:null,prefix:'',isVix:false},
-  {id:'dji',valId:'mv-dji',chgId:'mc-dji',srcId:'ms-dji',yfSym:'^DJI',fhSym:'OANDA:US30_USD',nseKey:null,prefix:'',isVix:false},
-  {id:'inr',valId:'mv-inr',chgId:'mc-inr',srcId:'ms-inr',yfSym:'INR=X',fhSym:'OANDA:USD_INR',nseKey:null,prefix:'',isVix:false},
-  {id:'crude',valId:'mv-crude',chgId:'mc-crude',srcId:'ms-crude',yfSym:'CL=F',fhSym:'OANDA:USOIL_USD',nseKey:null,prefix:'$',isVix:false},
-  {id:'gold',valId:'mv-gold',chgId:'mc-gold',srcId:'ms-gold',yfSym:'GC=F',fhSym:'OANDA:XAU_USD',nseKey:null,prefix:'$',isVix:false},
-  {id:'silver',valId:'mv-silver',chgId:'mc-silver',srcId:'ms-silver',yfSym:'SI=F',fhSym:'OANDA:XAG_USD',nseKey:null,prefix:'$',isVix:false},
-];
-function fmtV(n,d){d=d||2;if(n==null||isNaN(n))return'—';return n>=1000?n.toLocaleString('en-IN',{minimumFractionDigits:d,maximumFractionDigits:d}):n.toFixed(d);}
-function silentUpdate(item,price,chgPct,source){
-  var valEl=document.getElementById(item.valId);var chgEl=document.getElementById(item.chgId);var srcEl=document.getElementById(item.srcId);
-  if(!valEl||!chgEl)return;var up=chgPct>=0;var newVal=item.prefix+fmtV(price,2);var newChg=(up?'▲ +':'▼ ')+Math.abs(chgPct).toFixed(2)+'%';
-  if(valEl.textContent!==newVal){valEl.textContent=newVal;valEl.classList.remove('val-updated');void valEl.offsetWidth;valEl.classList.add('val-updated');}
-  if(chgEl.textContent!==newChg){chgEl.textContent=newChg;chgEl.className=item.isVix?'mbar-chg vix':(up?'mbar-chg up':'mbar-chg dn');}
-  if(srcEl)srcEl.textContent=source||'';
-}
-function setTs(){var ts=document.getElementById('mbar-ts');if(!ts)return;var now=new Intl.DateTimeFormat('en-IN',{timeZone:'Asia/Kolkata',hour:'2-digit',minute:'2-digit',hour12:false}).format(new Date());ts.textContent='UPD '+now;}
-function fetchNSE(){
-  var url='https://www.nseindia.com/api/allIndices';
-  var list=['https://corsproxy.io/?'+encodeURIComponent(url),'https://api.allorigins.win/get?url='+encodeURIComponent(url)];
-  return new Promise(function(resolve){var done=false,n=0;list.forEach(function(px){fetch(px,{signal:AbortSignal.timeout(7000),cache:'no-store'}).then(function(r){return r.ok?r.json():Promise.reject();}).then(function(j){if(j&&j.contents){try{j=JSON.parse(j.contents);}catch(e){return;}}var d=(j&&j.data)||[];if(d.length>=2&&!done){done=true;resolve(d);}}).catch(function(){}).finally(function(){n++;if(n===list.length&&!done)resolve([]);});});});
-}
-function fetchFinnhub(){
-  if(!FINNHUB_KEY||FINNHUB_KEY==='YOUR_FINNHUB_KEY'){return Promise.resolve({});}
-  var items=MB_MAP.filter(function(x){return x.fhSym;});
-  var calls=items.map(function(item){var url='https://finnhub.io/api/v1/quote?symbol='+encodeURIComponent(item.fhSym)+'&token='+FINNHUB_KEY;return fetch(url,{signal:AbortSignal.timeout(8000),cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.c&&j.c>0)return{id:item.id,price:j.c,chgPct:j.dp||0};return null;}).catch(function(){return null;});});
-  return Promise.all(calls).then(function(res){var map={};res.forEach(function(r){if(r)map[r.id]={price:r.price,chgPct:r.chgPct};});return map;});
-}
-function fetchDataJson(){return fetch('./data.json?_t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.data){return j.data;}return{};}).catch(function(){return{};});}
-function fetchFrankfurter(){return fetch('https://api.frankfurter.app/latest?from=USD&to=INR',{signal:AbortSignal.timeout(6000),cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.rates&&j.rates.INR){return{inr:{price:j.rates.INR,chgPct:0}};}return{};}).catch(function(){return{};});}
-function fetchOpenFX(){return fetch('https://open.er-api.com/v6/latest/USD',{signal:AbortSignal.timeout(6000),cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){if(j&&j.rates&&j.rates.INR){return{inr:{price:j.rates.INR,chgPct:0}};}return{};}).catch(function(){return{};});}
-function refreshMarketBar(){
-  Promise.all([fetchNSE(),fetchFinnhub(),fetchDataJson(),fetchFrankfurter(),fetchOpenFX()]).then(function(res){
-    var nseArr=res[0],fhMap=res[1],jsonMap=res[2],fxFrank=res[3],fxOpen=res[4];var updated=0;
-    MB_MAP.forEach(function(item){
-      var price=null,chgPct=null,src=null;
-      if(item.nseKey&&nseArr.length){var f=nseArr.find(function(d){return d.index===item.nseKey||d.indexSymbol===item.nseKey||(d.index||'').toLowerCase()===item.nseKey.toLowerCase();});if(f&&f.last!=null){price=parseFloat(f.last);chgPct=parseFloat(f.percentChange);src='NSE';}}
-      if(price===null&&fhMap[item.id]){price=fhMap[item.id].price;chgPct=fhMap[item.id].chgPct;src='FH';}
-      if(price===null&&jsonMap[item.id]){price=jsonMap[item.id].price;chgPct=jsonMap[item.id].chgPct;src='GHA';}
-      if(price===null&&fxFrank[item.id]){price=fxFrank[item.id].price;chgPct=fxFrank[item.id].chgPct;src='FX';}
-      if(price===null&&fxOpen[item.id]){price=fxOpen[item.id].price;chgPct=fxOpen[item.id].chgPct;src='FX2';}
-      if(price!==null){silentUpdate(item,price,chgPct,src);updated++;}
-    });
-    if(updated>0)setTs();
-    buildTicker(_top10Cache);
-  });
-}
-var STOCK_KEYS=[
-  {key:'t_RELIANCE',name:'RELIANCE',prefix:'₹'},{key:'t_HDFCBANK',name:'HDFC BANK',prefix:'₹'},
-  {key:'t_ICICIBANK',name:'ICICI BANK',prefix:'₹'},{key:'t_INFY',name:'INFOSYS',prefix:'₹'},
-  {key:'t_TCS',name:'TCS',prefix:'₹'},{key:'t_AIRTEL',name:'AIRTEL',prefix:'₹'},
-  {key:'t_ITC',name:'ITC',prefix:'₹'},{key:'t_SBI',name:'SBI',prefix:'₹'},
-  {key:'t_KOTAK',name:'KOTAK BANK',prefix:'₹'},{key:'t_LT',name:'L&T',prefix:'₹'},
-  {key:'u_AAPL',name:'APPLE',prefix:'$'},{key:'u_MSFT',name:'MICROSOFT',prefix:'$'},
-  {key:'u_NVDA',name:'NVIDIA',prefix:'$'},{key:'u_AMZN',name:'AMAZON',prefix:'$'},
-  {key:'u_GOOGL',name:'GOOGLE',prefix:'$'},{key:'u_META',name:'META',prefix:'$'},
-  {key:'u_TSLA',name:'TESLA',prefix:'$'},{key:'u_BRK',name:'BERKSHIRE',prefix:'$'},
-  {key:'u_JPM',name:'JPMORGAN',prefix:'$'},{key:'u_UNH',name:'UNITEDHLTH',prefix:'$'},
-];
-function fetchNiftyTop10(){
-  return fetch('./data.json?_t='+Date.now(),{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
-    if(!j||!j.data)return[];var results=[];
-    STOCK_KEYS.forEach(function(item){var d=j.data[item.key];if(d&&d.price){results.push({name:item.name,prefix:item.prefix,regularMarketPrice:d.price,regularMarketChangePercent:d.chgPct});}});
-    return results;
-  }).catch(function(){return[];});
-}
-function buildTicker(top10){
-  var items=[];
-  if(top10&&top10.length){top10.forEach(function(q){if(q.regularMarketPrice==null)return;var price=q.regularMarketPrice;var chg=q.regularMarketChangePercent||0;var up=chg>=0;var pfx=q.prefix||'₹';items.push({s:q.name,v:pfx+price.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}),c:(up?'+':'')+chg.toFixed(2)+'%',u:up});});}
-  if(items.length<3){var TICKER_LABELS={n50:'NIFTY 50',bn:'BANK NIFTY',vix:'INDIA VIX',fn:'FINNIFTY',sx:'SENSEX',sp:'S&P 500',ndq:'NASDAQ',dji:'DOW JONES',inr:'USD/INR',crude:'CRUDE OIL',gold:'GOLD',silver:'SILVER'};MB_MAP.forEach(function(item){var valEl=document.getElementById(item.valId);var chgEl=document.getElementById(item.chgId);if(!valEl||valEl.textContent==='···'||valEl.textContent==='—')return;var up=chgEl.classList.contains('up')||chgEl.classList.contains('vix');items.push({s:TICKER_LABELS[item.id],v:valEl.textContent,c:chgEl.textContent.replace('▲ ','').replace('▼ ','-'),u:up});});}
-  if(items.length<3)return;
-  var tkr=document.getElementById('tkr');var all=items.concat(items).concat(items);
-  tkr.innerHTML=all.map(function(t){return'<span class="ti"><span class="ti-inner"><span class="s">'+t.s+'</span><span class="tv">'+t.v+'</span><span class="'+(t.u?'up':'dn')+'">'+(t.u?'▲':'▼')+t.c+'</span></span></span>';}).join('');
-}
-var _top10Cache=[];
-function refreshTicker(){fetchNiftyTop10().then(function(res){_top10Cache=res||[];buildTicker(_top10Cache);});}
-refreshTicker();setInterval(refreshTicker,5*60*1000);
-refreshMarketBar();setInterval(refreshMarketBar,60000);
-
-var l=sessionStorage.getItem('lo');
-if(l)document.getElementById('lc').textContent=l;
-
-/* ══ IFRAME VIEWER ══ */
-var currentUrl='';
-var viewer=document.getElementById('viewer');
-var vwrap=document.getElementById('vframe-wrap');
-var vtitle=document.getElementById('vtitle');
-var vload=document.getElementById('vload');
-var _vframe=null;
-function spawnFrame(){if(_vframe){_vframe.src='about:blank';vwrap.removeChild(_vframe);_vframe=null;}var f=document.createElement('iframe');f.style.cssText='width:100%;height:100%;border:none;background:#000;position:absolute;inset:0;';f.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');f.setAttribute('referrerpolicy','no-referrer');vwrap.appendChild(f);_vframe=f;return f;}
-function openViewer(url,name){currentUrl=url;vtitle.textContent='▶ '+name.toUpperCase();viewer.classList.add('open');document.body.style.overflow='hidden';document.getElementById('floatback').classList.add('visible');history.pushState({viewer:true,url:url,name:name},'','#node');vload.classList.remove('hidden');var f=spawnFrame();f.onload=function(){vload.classList.add('hidden');};f.src=currentUrl;}
-function closeViewer(fromPopState){viewer.classList.remove('open');document.body.style.overflow='';document.getElementById('floatback').classList.remove('visible');if(_vframe){_vframe.src='about:blank';vwrap.removeChild(_vframe);_vframe=null;}currentUrl='';if(!fromPopState&&location.hash==='#node'){history.replaceState(null,'',location.pathname);}}
-function openExternal(){if(currentUrl)window.open(currentUrl,'_blank');}
-window.addEventListener('popstate',function(){if(viewer.classList.contains('open'))closeViewer(true);});
-if(location.hash==='#node'){history.replaceState(null,'',location.pathname);}
-document.addEventListener('keydown',function(e){if(e.key==='Escape'&&viewer.classList.contains('open'))closeViewer(false);});
-function go(e,name){
-  e.preventDefault();var card=e.currentTarget,url=card.href;
-  sessionStorage.setItem('lo',name);document.getElementById('lc').textContent=name;
-  var r=document.createElement('div');r.className='rpl';var b=card.getBoundingClientRect();
-  r.style.left=(e.clientX-b.left-30)+'px';r.style.top=(e.clientY-b.top-30)+'px';
-  card.appendChild(r);setTimeout(function(){r.remove();},600);
-  setTimeout(function(){openViewer(url,name);},200);
-}
-document.querySelectorAll('.sc-card[href]').forEach(function(c,i){
-  c.style.opacity='0';c.style.transform='translateY(14px)';
-  c.style.transition='opacity .4s ease '+i*.07+'s,transform .4s ease '+i*.07+'s';
-  setTimeout(function(){c.style.opacity='1';c.style.transform='none';},80+i*60);
-});
-</script>
+        // Resize charts on window resize
+        window.addEventListener('resize', () => {
+            // Simple reload for demo; in production you'd resize each chart
+            loadData();
+        });
+    </script>
 </body>
 </html>
