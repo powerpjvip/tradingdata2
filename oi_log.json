@@ -1,23 +1,23 @@
 [
   {
-    "time": "14:45",
-    "timestamp": "07-Sep-2026 14:45 IST",
-    "call_oi_chg": 1884343,
-    "put_oi_chg": 746671,
-    "diff": -1137672,
-    "pcr": 0.76,
+    "time": "14:19",
+    "timestamp": "08-Sep-2026 14:19 IST",
+    "call_oi_chg": 2190262,
+    "put_oi_chg": 1676688,
+    "diff": -513574,
+    "pcr": 0.79,
     "opt_signal": "SELL",
-    "vwap": 27170.73,
-    "fut_price": 18033.25,
-    "spot_price": 23756.95,
+    "vwap": 27031.48,
+    "fut_price": 18082.2,
+    "spot_price": 23654.2,
     "vwap_signal": "SELL",
-    "nifty_move_pct": -0.59,
-    "nearest_level": 23700,
+    "nifty_move_pct": -0.53,
+    "nearest_level": 23600,
     "nearest_label": "S1",
-    "distance_pts": 57.0,
-    "rsi_15m": 46.4,
+    "distance_pts": 54.2,
+    "rsi_15m": 42.4,
     "ema_signal": "SELL",
-    "ema5": 23764.6,
-    "ema13": 23772.41
+    "ema5": 23648.63,
+    "ema13": 23658.37
   }
 ]
